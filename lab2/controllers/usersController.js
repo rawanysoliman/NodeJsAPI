@@ -1,20 +1,51 @@
 const usersSrv = require("../services/users");
 
 class UsersController {
-  async createUser(req, res) {
-    const { name, email, password, passwordConfirm } = req.body;
 
-    const payload = { name, email, password, passwordConfirm };
 
-    const user = await usersSrv.createUserSrv(payload);
 
-    res.status(201).json({
-      message: "User created successfully",
-      status: "success",
-      data: user,
-    });
+  async signUp(req, res, next) {
+    try {
+      const { name, email, password, role } = req.body;
+      const payload = { name, email, password, role };
+      
+      const user = await usersSrv.createUserSrv(payload);
+  
+      res.status(201).json({
+        message: "User created successfully",
+        status: "success",
+        data: user,
+      });
+    } catch (error) {
+      next(error);
+    }
   }
+  
+
+  //signin
+  async signIn(req, res, next) {
+    try {
+      const { email, password } = req.body;
+      const payload = { email, password };    
+
+      //signinsrv returns token
+      const user = await usersSrv.signInSrv(payload);
+
+      res.status(200).json({
+        message: "User signed in successfully",
+        status: "success",
+        data: user,
+      });
+    } catch (error) {
+      next(error);  // Pass error to error handling middleware
+    }
+  }
+
   async getAllUsers(req, res) {
+
+    //get user from req.user from authorization middleware
+    console.log("HEEEEREE=>>>>>",req.user);
+
     // read users.json
     const users = await usersSrv.getAllUsersSrv();
 

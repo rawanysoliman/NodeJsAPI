@@ -1,12 +1,18 @@
 const Post = require("../../models/posts");
 
-//Post.find() retrieves all documents from the posts collection (equivalent to SQL's SELECT * FROM posts).
-const getAllPostsSrv = async () => {
-    const posts = await Post.find();
-    return posts;
-}
+const getAllPostsSrv = async (userId) => {
+  // Get all posts from DB
+  const posts = await Post.find();
+
+  // Map over posts and add a flag 'isMine' if post.author equals userId
+  const postsWithFlag = posts.map(post => {
+    return {
+      ...post.toObject(),
+      isMine: post.author.toString() === userId, // true if owned by user
+    };
+  });
+
+  return postsWithFlag;
+};
 
 module.exports = getAllPostsSrv;
-
-
-

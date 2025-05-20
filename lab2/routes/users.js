@@ -1,12 +1,22 @@
 const express = require("express");
 const router = express.Router();
 const usersController = require("../controllers/usersController");
+const joiValidation=require("../middlewares/joiValidation");
+const createUserSchema=require("../schemas/createUserSchema");
+const loginSchema=require("../schemas/loginSchema");
+const authenticated=require("../middlewares/authentication");
+const restrictTo = require("../middlewares/restrictTo");
 
 
-router.post("/", usersController.createUser);
+
+// signup
+router.post("/signup",joiValidation(createUserSchema), usersController.signUp);
+
+//signin
+router.post("/signin",joiValidation(loginSchema), usersController.signIn);
 
 // get all users
-router.get("/", usersController.getAllUsers);
+router.get("/", authenticated, restrictTo("admin"), usersController.getAllUsers);
 
 // get user by id
 router.get("/:id", usersController.getUserById);

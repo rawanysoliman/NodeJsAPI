@@ -1,18 +1,27 @@
 const User = require("../../models/users");
 const APIError = require("../../middlewares/apiError");
+const bcrypt = require("bcrypt");
 
-const createUserSrv = async ({ name, email, password, passwordConfirm }) => {
-  if (!name || !email || !password || !passwordConfirm) {
-    throw new APIError("missing user data", 400);
-  }
+//remove validation bec it is done in validation middleware
+//must hash password and save it in db after user is created
+const createUserSrv = async ({ name, email, password, role }) => {
+  const saltRounds = parseInt(process.env.saltRounds);
+  const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-  if (password !== passwordConfirm) {
-    throw new APIError("passwords do not match", 400);
-  }
+  const user = await User.create({
+    name,
+    email,
+    password: hashedPassword,
+    role, 
+  });
 
-  const user = await User.create({ name, email, password });
-
-  return user;
+  // remove password from response
+  const createdUser = user.toObject();
+  delete createdUser.password;
+  return createdUser;
 };
 
+
 module.exports = createUserSrv;
+
+

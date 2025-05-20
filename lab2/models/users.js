@@ -12,12 +12,10 @@ const usersSchema = new mongoose.Schema(
       required: true,
       match: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
     },
+    //remove validation since it is done in validation middleware
     password: {
       type: String,
       required: true,
-      minlength: 8,
-      match:
-        /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
     },
     role: {
       type: String,
