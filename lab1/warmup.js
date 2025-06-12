@@ -12,5 +12,6 @@ const users = [
   const nameOnly = users.map(user => user.name);
   console.log(nameOnly);
 
+
 const firstAdmin = users.find(user => user.role === "admin");
 console.log(firstAdmin);

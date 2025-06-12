@@ -13,7 +13,7 @@ const getPostByIdSrv = async (id, userId) => {
   if (!post) {
     throw new APIError("Post not found", 404);
   }
-
+//not an array so we can use toObject not map
   const postWithFlag = {
     ...post.toObject(),
     isMine: post.author.toString() === userId,
@@ -21,6 +21,15 @@ const getPostByIdSrv = async (id, userId) => {
 
   return postWithFlag;
 };
+
+
+
+
+
+
+
+
+
 
 module.exports = getPostByIdSrv;
 
